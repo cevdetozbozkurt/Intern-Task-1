@@ -1,0 +1,38 @@
+﻿@using Task_1.ViewModels;
+
+@model EditProfileViewModel
+
+<form method="post" asp-action="EditProfile" enctype="multipart/form-data">
+	<input type="hidden" id="Id" name="Id" asp-for="Id" />
+	<div class="form-group">
+		<label asp-for="Name">Pace</label>
+		<input asp-for="Name" class="form-control" placeholder="Pace" />
+		<span asp-validation-for="Name" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="Surname">Mileage</label>
+		<input asp-for="Surname" class="form-control" placeholder="Mileage" />
+		<span asp-validation-for="Surname" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="City">City</label>
+		<input asp-for="City" class="form-control" placeholder="City" />
+		<span asp-validation-for="City" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="State">State</label>
+		<input asp-for="State" class="form-control" placeholder="State" />
+		<span asp-validation-for="State" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="Street">Street</label>
+		<input asp-for="Street" class="form-control" placeholder="Street" />
+		<span asp-validation-for="Street" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="Country">Street</label>
+		<input asp-for="Country" class="form-control" placeholder="Country" />
+		<span asp-validation-for="Country" class="text-danger"></span>
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+</form>

@@ -84,12 +84,9 @@ namespace Task_1.Data
                         {
                             WalletBalance = 100000
                         },
-                        Address = new Address()
-                        {
-                            Street = "123 Main St",
-                            City = "Adana",
-                            State = "TR"
-                        }
+                        Street = "123 Main St",
+                        City = "Adana",
+                        State = "TR"
                     };
                     await userManager.CreateAsync(newAdminUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
@@ -108,12 +105,10 @@ namespace Task_1.Data
                         Email = appUserEmail,
                         EmailConfirmed = true,
                         Wallet = new Wallet(),
-                        Address = new Address()
-                        {
-                            Street = "123 Main St",
-                            City = "Charlotte",
-                            State = "NC"
-                        }
+                        Street = "123 Main St",
+                        City = "Charlotte",
+                        State = "NC"
+
                     };
                     await userManager.CreateAsync(newAppUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAppUser, UserRoles.User);

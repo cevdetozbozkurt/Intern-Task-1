@@ -10,9 +10,10 @@ namespace Task_1.Models
         [ForeignKey("Product")]
         public int? ProductId { get; set; }
         public int? ProductQuantity { get; set; }
-        [ForeignKey("Address")]
-        public int? AddressId { get; set; }
-        public Address? Address{ get; set; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? Country { get; set; }
         [ForeignKey("Wallet")]
         public int WalletId { get; set; }
         public Wallet Wallet { get; set; }
