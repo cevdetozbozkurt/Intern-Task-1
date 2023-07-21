@@ -20,12 +20,13 @@ namespace Task_1.Repository
 
         public bool Delete(Customer user)
         {
-            throw new NotImplementedException();
-        }
+			_context.Remove(user);
+			return Save();
+		}
 
         public async Task<IEnumerable<Customer>> GetAllUsers()
         {
-            return await _context.Users.ToListAsync(); ;
+            return await _context.Users.ToListAsync();
         }
 
         public async Task<Customer> GetUserById(string userId)

@@ -30,8 +30,8 @@
 							</button>
 							<div class="collapse" id="home-collapse" style="">
 								<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-									@*
-									@foreach(var item in categoryController.)
+									
+									@*@foreach (var item in )
 									{
 									<li style="margin-left:22px"><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">@item.CategoryName</a></li>
 									}*@
@@ -39,11 +39,38 @@
 							</div>
 						</li>
 					</ul>
-					@if (User.Identity.IsAuthenticated)
+					@if (User.Identity.IsAuthenticated && User.IsInRole("user"))
 					{
 						<ul class="navbar-nav flex-end" style="margin-right:22px;">
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Detail">Dashboard</a>
+								<a class="nav-link text-dark" asp-area=""  asp-controller="Customer" asp-action="Detail">Profile</a>
+							</li>
+							<li class="nav-item mr-auto">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Orders</a>
+							</li>
+							<li class="nav-item mr-auto">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cart</a>
+							</li>
+							<li class="nav-item">
+								<form asp-area="" asp-controller="Account" asp-action="Logout">
+									<button class="btn btn-outline-danger">Logout</button>
+								</form>
+							</li>
+						</ul>
+					}else if(User.Identity.IsAuthenticated && User.IsInRole("admin"))
+					{
+						<ul class="navbar-nav flex-end" style="margin-right:22px;">
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Detail">Profile</a>
+							</li>
+							<li class="nav-item mr-auto">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Orders</a>
+							</li>
+							<li class="nav-item mr-auto">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cart</a>
 							</li>
 							<li class="nav-item">
 								<form asp-area="" asp-controller="Account" asp-action="Logout">
@@ -62,7 +89,7 @@
 								<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
 							</li>
 							<li class="nav-item mr-auto">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Orders</a>
+								<a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Orders</a>
 							</li>
 							<li class="nav-item mr-auto">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cart</a>

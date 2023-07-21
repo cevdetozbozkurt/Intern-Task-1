@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using Task_1.Data;
 using Task_1.Interfaces;
 using Task_1.Models;
 using Task_1.Repository;
@@ -17,66 +18,68 @@ namespace Task_1.Controllers
         private readonly IDashboardRepository _repository;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly UserManager<Customer> _userManager;
-        public DashboardController(IDashboardRepository dashboardRepository, IHttpContextAccessor httpContextAccessor, UserManager<Customer> userManager)
+        private readonly ApplicationDbContext _context;
+        public DashboardController(IDashboardRepository dashboardRepository, IHttpContextAccessor httpContextAccessor, UserManager<Customer> userManager,ApplicationDbContext context)
         {
             _repository = dashboardRepository;
             _contextAccessor = httpContextAccessor;
             _userManager = userManager;
-
+            _context = context;
         }
 
+        public string GetCategoryName(Product product)
+        {
+            var category = _context.Categories.FindAsync(product.CategoryId);
+            
+            return category.Result.CategoryName;
+        }
+
+        [HttpGet("Products")]
 		public async Task<IActionResult> Index()
 		{
-			return View();
+
+            var products = await _repository.GetAllProducts();
+
+			List<DashboardViewModel> result = new List<DashboardViewModel>();
+			foreach (var product in products)
+			{
+				var dashbaordViewModel = new DashboardViewModel
+				{
+					Id = product.Id,
+					ProductName = product.ProductName,
+					ProductDescription = product.ProductDescription,
+					ProductImageUrl = product.ProductImageUrl,
+					Price = product.Price,
+					Quantity = product.Quantity,
+					CategoryName = GetCategoryName(product),	
+				};
+				result.Add(dashbaordViewModel);
+			}
+
+			return View(result);
 		}
 
+
+
+
+
 		[HttpGet]
-        public async Task<IActionResult> EditUserProfile()
-        {
-            var user = await _userManager.GetUserAsync(User);
+		public async Task<IActionResult> Delete(int id)
+		{
+			var product = await _repository.GetProductById(id);
+			if (product == null) return View("Error");
+			return View(product);
+		}
 
-            if (user == null)
-            {
-                return View("Error");
-            }
+		[HttpPost, ActionName("Delete")]
+		public async Task<IActionResult> DeleteUser(int id)
+		{
+			var product = await _repository.GetProductById(id);
+			if (product == null) return View("Error");
+			_repository.Delete(product);
+			return RedirectToAction("Index");
+		}
 
-            var editMV = new EditProfileViewModel()
-            {
-                Name = user.Name,
-                Surname = user.Surname,
-                City = user.City,
-                State = user.State,
-                Street = user.Street,
-            };
-            return View(editMV);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditUserProfile(EditProfileViewModel editVM)
-        {
-            if (!ModelState.IsValid)
-            {
-                ModelState.AddModelError("", "Failed to edit profile");
-                return View("EditProfile", editVM);
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return View("Error");
-            }
-
-            user.Name = editVM.Name;
-            user.Surname = editVM.Surname;
-            user.City = editVM.City;
-            user.State = editVM.State;
-            user.Street = editVM.Street;
-
-            await _userManager.UpdateAsync(user);
-
-            return RedirectToAction("Detail", "User", new { user.Id });
-        }
-    }
+	}
 }
 

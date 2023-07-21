@@ -5,9 +5,11 @@ namespace Task_1.Interfaces
 {
     public interface IDashboardRepository
     {
-        Task<Customer> GetUserById(string id);
-        Task<Customer> GetUserByIdNoTracking(string id);
+        Task<IEnumerable<Product>> GetAllProducts();
+        Task<Product> GetProductById(int id);
         bool Save();
-        bool UpdateUser(Customer user);
+        bool Add(Product product);
+        bool UpdateProduct(Product product);
+        bool Delete(Product product);
     }
 }

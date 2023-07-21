@@ -1,0 +1,47 @@
+﻿@using Task_1.Data;
+@using Task_1.Interfaces;
+@using Task_1.Repository;
+@using Task_1.ViewModels;
+
+@model CreateProductViewModel
+
+
+
+<form method="post" asp-controller="Product" asp-action="Create" enctype="multipart/form-data">
+    <input type="hidden" id="Id" name="Id" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="ProductName">Product Name</label>
+        <input asp-for="ProductName" type="text" class="form-control" placeholder="Product Name">
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductDescription">Product Description</label>
+        <input asp-for="ProductDescription" type="text" class="form-control" placeholder="Product Description">
+        <span asp-validation-for="ProductDescription" class="text-danger"></span>
+    </div>
+
+   <div class="form-group">
+        <label asp-for="CategoryId">CategoryId</label>
+        <input asp-for="CategoryId" type="text" class="form-control" placeholder="CategoryId">
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Quantity">Quantity</label>
+        <input asp-for="Quantity" type="text" class="form-control" placeholder="Quantity">
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price">Price</label>
+        <input asp-for="Price" type="text" class="form-control" placeholder="Price">
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductImageUrl">ProductImageUrl</label>
+        <input asp-for="ProductImageUrl" type="text" class="form-control" placeholder="ProductImageUrl">
+        <span asp-validation-for="ProductImageUrl" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

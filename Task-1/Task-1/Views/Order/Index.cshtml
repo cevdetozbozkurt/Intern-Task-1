@@ -1,12 +1,10 @@
-﻿@using Task_1.VıewModels;
-@model HomeViewModel
+﻿@using Task_1.ViewModels;
 
-@{
-	ViewData["Title"] = "Home Page";
-}
+@model OrderViewModel
+
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-	@foreach(var item in Model.Products)
+	@foreach (var item in Model.Product)
 	{
 		<div class="col">
 			<div class="card shadow-sm">
@@ -19,13 +17,6 @@
 					<p class="card-text">@item.ProductName</p>
 					<p class="card-text">@item.ProductDescription</p>
 					<p class="card-text">@item.Price</p>
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="btn-group">
-							<button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-							<button type="button" class="btn btn-sm btn-outline-secondary">Add To Cart</button>
-							<a asp-controller="Order" asp-action="Add" asp-route-id="" class="btn btn-sm btn-outline-secondary">Add To Cart</a>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>

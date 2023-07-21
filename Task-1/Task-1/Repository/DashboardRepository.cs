@@ -15,26 +15,38 @@ namespace Task_1.Repository
             _context = context;
         }
 
-        public async Task<Customer> GetUserById(string id)
-        {
-            return await _context.Users.FindAsync(id);
-        }
+		public bool Add(Product product)
+		{
+			_context.Add(product);
+			return Save();
+		}
 
-        public async Task<Customer> GetUserByIdNoTracking(string id)
-        {
-            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
-        }
+		public bool Delete(Product product)
+		{
+			_context.Remove(product);
+			return Save();
+		}
 
-        public bool Save()
-        {
-            var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
-        }
+		public async Task<IEnumerable<Product>> GetAllProducts()
+		{
+			return await _context.Products.ToListAsync();
+		}
 
-        public bool UpdateUser(Customer user)
-        {
-            _context.Users.Update(user);
-            return Save();
-        }
-    }
+		public async Task<Product> GetProductById(int id)
+		{
+			return await _context.Products.FindAsync(id);
+		}
+
+		public bool Save()
+		{
+			var saved = _context.SaveChanges();
+			return saved > 0 ? true : false;
+		}
+
+		public bool UpdateProduct(Product product)
+		{
+			_context.Update(product);
+			return Save();
+		}
+	}
 }
