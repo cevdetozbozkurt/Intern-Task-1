@@ -1,0 +1,31 @@
+﻿@using WebApplication1.ViewModels;
+
+@model EditProductViewModel
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<p> Edit Profile Section</p>
+
+<form method="post" asp-action="EditProfile" enctype="multipart/form-data">
+	<input type="hidden" id="Id" name="Id" asp-for="Id" />
+	<div class="form-group">
+		<input asp-for="FirstName" class="form-control form-control-user" placeholder="FirstName" />
+		<span asp-validation-for="FirstName" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<input asp-for="LastName" class="form-control form-control-user" placeholder="LastName" />
+		<span asp-validation-for="LastName" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<input asp-for="Email" class="form-control form-control-user" placeholder="Email" />
+		<span asp-validation-for="Email" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<input asp-for="Address" class="form-control form-control-user" placeholder="Address" />
+		<span asp-validation-for="Address" class="text-danger"></span>
+	</div>
+	<button type="submit" class="btn btn-primary btn-user btn-block">Submit</button>
+</form>
