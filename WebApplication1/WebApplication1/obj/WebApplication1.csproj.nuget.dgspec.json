@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\WebApplication1\\WebApplication1\\WebApplication1.csproj": {}
+    "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\Intern-Task-1\\WebApplication1\\WebApplication1\\WebApplication1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\WebApplication1\\WebApplication1\\WebApplication1.csproj": {
+    "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\Intern-Task-1\\WebApplication1\\WebApplication1\\WebApplication1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+        "projectUniqueName": "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\Intern-Task-1\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
         "projectName": "WebApplication1",
-        "projectPath": "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+        "projectPath": "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\Intern-Task-1\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
         "packagesPath": "C:\\Users\\eren2\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\WebApplication1\\WebApplication1\\obj\\",
+        "outputPath": "C:\\Users\\eren2\\OneDrive\\Belgeler\\GitHub\\Intern-Task-1\\WebApplication1\\WebApplication1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\eren2\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -41,6 +41,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNet.Mvc": {
+              "target": "Package",
+              "version": "[5.2.9, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.20, )"

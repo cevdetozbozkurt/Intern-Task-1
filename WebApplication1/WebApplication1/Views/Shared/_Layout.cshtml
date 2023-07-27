@@ -25,9 +25,6 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 						</li>
-						@*<li class="nav-item">
-						<a class="nav-link text-dark dropdown-toggle" asp-area="" asp-controller="" asp-action="">Categories</a>
-						</li>*@
 						@if (ViewBag.ShowCategories == true)
 						{
 							<li class="nav-item dropdown">
@@ -50,7 +47,7 @@
 									<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Orders</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cart</a>
+									<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ShowCart">Cart</a>
 								</li>
 								<li class="nav-item">
 									<form asp-area="" asp-controller="Member" asp-action="Logout">
@@ -72,7 +69,7 @@
 									<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Orders</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cart</a>
+									<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ShowCart">Cart</a>
 								</li>
 								<li class="nav-item">
 									<form asp-area="" asp-controller="Member" asp-action="Logout">

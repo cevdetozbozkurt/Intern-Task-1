@@ -1,0 +1,32 @@
+﻿@using WebApplication1.ViewModels;
+@model CartViewModel
+
+<h2>Sepetiniz</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Birim Fiyat</th>
+            <th>Miktar</th>
+            <th>Toplam Fiyat</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Product.Price TL</td>
+                <td>@item.Quantity</td>
+                <td>@(item.Product.Price * item.Quantity) TL</td>
+                <td><a href="@Url.Action("RemoveFromCart", "Home", new { productId = item.ProductId })" class="btn btn-danger">Sepetten Çıkar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Toplam Tutar: @Model.TotalPrice TL</h3>
+
+<a href="@Url.Action("Checkout", "Home")" class="btn btn-success">Ödeme Yap</a>

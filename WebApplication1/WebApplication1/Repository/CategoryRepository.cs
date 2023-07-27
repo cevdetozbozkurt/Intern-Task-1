@@ -47,5 +47,11 @@ namespace WebApplication1.Repository
 			_context.Update(category);
 			return Save();
 		}
+
+		public bool UpdateName(Category category)
+		{
+			_context.Attach(category);
+			return Save();
+		}
 	}
 }

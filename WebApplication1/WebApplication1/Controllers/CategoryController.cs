@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
 using WebApplication1.Repository;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers
 {
@@ -13,55 +15,70 @@ namespace WebApplication1.Controllers
 		private readonly ICategoryRepository _categoryRepository;
 		private readonly ApplicationDbContext _context;
 		public CategoryController(ICategoryRepository categoryRepository, ApplicationDbContext context)
-        {
-            _categoryRepository = categoryRepository;
+		{
+			_categoryRepository = categoryRepository;
 			_context = context;
-        }
+		}
 
-		private bool CategoryExists(int id)
+		[HttpGet]
+		public IActionResult Create()
 		{
-			return _context.Categories.Any(e => e.Id == id); // _context is your database context
+			
+			var addCategoryViewModel = new AddCategoryViewModel();
+			return View(addCategoryViewModel);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create(Category category)
+		public async Task<IActionResult> Create(AddCategoryViewModel categoryVM)
 		{
 			if (ModelState.IsValid)
 			{
+				//var result = await _photoService.AddPhotoAsync(clubVM.Image);
+				var category = new Category
+				{
+					Id = categoryVM.Id, 
+					Name = categoryVM.Name,
+				};
 				_categoryRepository.Add(category);
-				return RedirectToAction("Index");
+				return RedirectToAction("Categories", "Dashboard");
 			}
-			return View(category);
+			else
+			{
+				ModelState.AddModelError("", "Error");
+			}
+			return View(categoryVM);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> Edit(int id)
+		{
+			var category = await _categoryRepository.GetById(id);
+			if (category == null) { return View("Error"); }
+			var editVM = new CategoryEditViewModel()
+			{
+				Id = category.Id,
+				Name = category.Name,
+			};
+			return View(editVM);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Edit(int id, Category category)
+		public async Task<IActionResult> Edit(int id, CategoryEditViewModel editVM)
 		{
-			if (id != category.Id)
+			if (!ModelState.IsValid)
 			{
-				return NotFound();
+				ModelState.AddModelError("", "Failed to edit profile");
+				return View("EditProduct", editVM);
 			}
+			var category = await _categoryRepository.GetById(id);
 
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					_categoryRepository.Update(category);
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!CategoryExists(category.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
-				return RedirectToAction("Index");
-			}
-			return View(category);
+			if (category == null) { return View("Error"); }
+
+			category.Name = editVM.Name;
+
+			_categoryRepository.Update(category);
+
+			return RedirectToAction("Categories","Dashboard");
 		}
 		[HttpGet]
 		public async Task<IActionResult> Delete(int id)

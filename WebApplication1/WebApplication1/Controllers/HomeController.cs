@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Web;
 using WebApplication1.Data;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
@@ -18,6 +19,51 @@ namespace WebApplication1.Controllers
 			_logger = logger;
 			_productRepository = productRepository;
 			_context = context;
+		}
+
+		public async Task<IActionResult> AddToCart(int productId, int quantity)
+		{
+			// Ürünü veritabanından getir
+			var product = await _productRepository.GetById(productId);
+
+			// Sepeti session değişkeninden al veya yeni oluştur
+			var cart = Session.session;
+
+			// Sepette aynı üründen varsa miktarını artır, yoksa yeni ekle
+			var existingItem = cart.FirstOrDefault(x => x.ProductId == productId);
+			if (existingItem != null)
+			{
+				existingItem.Quantity += quantity;
+			}
+			else
+			{
+				cart.Add(new OrderDetail
+				{
+					ProductId = productId,
+					Product = product,
+					Quantity = quantity
+				});
+			}
+			Session.session = cart;
+		return RedirectToAction ("ShowCart");
+		}
+
+		public void RemoveFromCart(int productId)
+		{
+			// Sepeti session değişkeninden al
+			var cart = Session.session;
+
+			// Sepette istenen ürünü bul
+			var item = cart.FirstOrDefault(x => x.ProductId == productId);
+
+			// Ürün varsa listeden kaldır
+			if (item != null)
+			{
+				cart.Remove(item);
+			}
+
+			// Sepeti session değişkenine geri kaydet
+			Session.session = cart;
 		}
 
 		public IActionResult FilterByCategory(int id)
@@ -40,6 +86,28 @@ namespace WebApplication1.Controllers
 			productVM.Categories = ViewBag.Categories;
 			productVM.Products = await _productRepository.GetAll();
 			return View(productVM);
+		}
+
+		public ActionResult ShowCart()
+		{
+			// Sepeti session değişkeninden al
+			var cart = Session.session;
+
+			// Sepet boşsa hata mesajı göster
+			if (cart == null || cart.Count == 0)
+			{
+				ViewBag.Message = "Sepetinizde ürün bulunmamaktadır.";
+				return View();
+			}
+
+			// Sepeti viewmodel olarak oluştur
+			var model = new CartViewModel
+			{
+				Items = cart
+			};
+
+			// Viewmodeli View sayfasına gönder
+			return View(model);
 		}
 
 		public IActionResult Privacy()

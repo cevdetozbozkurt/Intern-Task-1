@@ -8,6 +8,7 @@ namespace WebApplication1.Interfaces
 		Task<Category> GetById(int id);
 		bool Add(Category category);
 		bool Update(Category category);
+		bool UpdateName(Category category);
 		bool Delete(Category category);
 		bool Save();
 	}

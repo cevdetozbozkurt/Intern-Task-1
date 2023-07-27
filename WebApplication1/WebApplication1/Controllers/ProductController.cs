@@ -84,11 +84,11 @@ namespace WebApplication1.Controllers
         public IActionResult Create()
         {
 			var categories = _context.Categories.ToList();
-			var createClubViewModel = new AddProductViewModel()
+			var addProductViewModel = new AddProductViewModel()
 			{
 				Categories = new SelectList(categories, "Id", "Name"),
 			};
-            return View(createClubViewModel);
+            return View(addProductViewModel);
         }
 
         [HttpPost]
