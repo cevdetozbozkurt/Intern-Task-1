@@ -51,5 +51,10 @@ namespace WebApplication1.Repository
             _context.Members.Update(member);
             return Save();
         }
+
+        public async Task<Member> GetMemberNoTrackingById(string memberId)
+        {
+            return await _context.Members.AsNoTracking().FirstOrDefaultAsync(a => a.Id == memberId);
+        }
     }
 }

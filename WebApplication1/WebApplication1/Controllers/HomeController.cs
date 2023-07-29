@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Web;
 using WebApplication1.Data;
+using WebApplication1.Data.Enum;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
 using WebApplication1.ViewModels;
@@ -12,13 +14,17 @@ namespace WebApplication1.Controllers
 	{
 		private readonly ILogger<HomeController> _logger;
 		private readonly IProductRepository _productRepository;
+		private readonly IOrderRepository _orderRepository;
 		private readonly ApplicationDbContext _context;
+		private readonly UserManager<Member> _userManager;
 
-		public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, ApplicationDbContext context)
+		public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, ApplicationDbContext context, UserManager<Member> userManager, IOrderRepository orderRepository)
 		{
 			_logger = logger;
 			_productRepository = productRepository;
 			_context = context;
+			_userManager = userManager;
+			_orderRepository = orderRepository;
 		}
 
 		public async Task<IActionResult> AddToCart(int productId, int quantity)
@@ -48,7 +54,7 @@ namespace WebApplication1.Controllers
 		return RedirectToAction ("ShowCart");
 		}
 
-		public void RemoveFromCart(int productId)
+		public async Task<IActionResult> RemoveFromCart(int productId)
 		{
 			// Sepeti session değişkeninden al
 			var cart = Session.session;
@@ -64,6 +70,7 @@ namespace WebApplication1.Controllers
 
 			// Sepeti session değişkenine geri kaydet
 			Session.session = cart;
+			return RedirectToAction("ShowCart");
 		}
 
 		public IActionResult FilterByCategory(int id)
@@ -110,7 +117,9 @@ namespace WebApplication1.Controllers
 			return View(model);
 		}
 
-		public IActionResult Privacy()
+        
+
+        public IActionResult Privacy()
 		{
 			return View();
 		}

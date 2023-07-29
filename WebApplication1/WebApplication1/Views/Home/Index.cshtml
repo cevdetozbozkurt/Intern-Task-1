@@ -10,19 +10,13 @@
 	{
 		<div class="col">
 			<div class="card shadow-sm">
-				<svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
-					<title>Placeholder</title>
-					<rect width="100%" height="100%" fill="#55595c"></rect>
-					<text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>\
-				</svg>
+				<img class="card-img-top" src="@item.Image" alt="Card image cap">
 				<div class="card-body">
 					<p class="card-text">@item.Name</p>
 					<p class="card-text">@item.Description</p>
 					<p class="card-text">@item.Price $</p>
 					<div class="d-flex justify-content-between align-items-center">
 						<div class="btn-group">
-							<button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-							@*<a asp-controller="Home" asp-action="Add" asp-route-id="" class="btn btn-sm btn-outline-secondary">Add To Cart</a>*@
 							<form method="post" action="@Url.Action("AddToCart", "Home")">
 								<input type="hidden" name="productId" value="@item.Id" />
 								<input type="number" name="quantity" value="1" min="1" max="@item.Stock" />

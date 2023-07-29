@@ -4,6 +4,8 @@ using WebApplication1.Models;
 using WebApplication1.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using WebApplication1.Repository;
+using WebApplication1.Data.Enum;
+using WebApplication1.Data;
 
 namespace WebApplication1.Controllers
 {
@@ -26,24 +28,93 @@ namespace WebApplication1.Controllers
 
 		}
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> OrderConfirmation()
 		{
-			var orderVM = new OrderListViewModel();
-			orderVM.Orders = _orderRepository.GetOrdersByMemberId(_userManager.GetUserId(User));
-			orderVM.Members = await _memberRepository.GetAllMembers();
-			return View(orderVM);
+			return View();
 		}
 
-		public async Task<IActionResult> Detail(int id)
+		public async Task<IActionResult> Orders()
 		{
+			var model = _orderRepository.GetOrdersByMemberId(_userManager.GetUserId(User));
+			return View(model);
+		}
 
-			var order = _orderRepository.GetOrderById(id);
-			if (order == null)
+		public async Task<IActionResult> OrderDetails(int id)
+		{
+			var order = await _orderRepository.GetOrderById(id);
+			var products = new List<Product>();
+			var quantities = new List<int>();
+			var member = await _memberRepository.GetMemberNoTrackingById(order.MemberId);
+			foreach (var item in order.OrderDetails)
 			{
-				return View("Error");
+				products.Add(await _productRepository.GetById(item.ProductId));
+				quantities.Add(item.Quantity);
 			}
-			// buraya DetailViewModel hazirlanip detailVM View e gonderilecek
-			return View(order);
+
+			var orderDetailVM = new AddOrderDetailViewModel()
+			{
+				Member = member,
+				Order = order,
+				OrderId = order.Id,
+				Products = products,
+				Quantity = quantities,
+			};
+
+
+			return View(orderDetailVM);
+		}
+
+		public async Task<ActionResult> Checkout()
+		{
+			// Sepeti session değişkeninden al
+			var cart = Session.session;
+
+			// Sepet boşsa hata mesajı göster
+			if (cart == null || cart.Count == 0)
+			{
+				ViewBag.Message = "Sepetinizde ürün bulunmamaktadır.";
+				return View();
+			}
+
+			var orderDetail = new OrderDetail();
+			var member = await _userManager.GetUserAsync(User);
+
+			// Yeni bir sipariş nesnesi oluştur
+			var order = new Order
+			{
+				Date = DateTime.Now, // Sipariş tarihi
+				Total = cart.Sum(x => x.Product.Price * x.Quantity), // Sipariş toplamı
+				Status = OrderStatus.Hazırlanıyor, // Sipariş durumu
+				MemberId = member.Id, // Siparişi veren üye idsi
+				Member = member,
+				OrderDetails = new List<OrderDetail>() // Sipariş detayları
+			};
+
+			// Siparişi veritabanına kaydet
+			_orderRepository.Add(order);
+
+			foreach (var odetail in cart)
+			{
+				orderDetail = odetail;
+				orderDetail.Order = order;
+				order.OrderDetails.Add(orderDetail);
+			}
+
+			_orderRepository.Update(order);
+
+
+			var addOrderVM = new AddOrderViewModel()
+			{
+				Date = order.Date,
+				Status = order.Status,
+				Total = order.Total,
+			};
+
+			// Sepeti session değişkeninden sil
+			Session.session = new List<OrderDetail>();
+
+			// Sipariş onay sayfasına yönlendir
+			return View(addOrderVM);
 		}
 
 		// GET: Order/Create
@@ -73,9 +144,11 @@ namespace WebApplication1.Controllers
 		}
 
 		// GET: Order/Edit/5
-		public ActionResult Edit(int id)
+		public async Task<ActionResult> Edit(int id)
 		{
-			var order = _orderRepository.GetOrderById(id); // Id'ye göre siparişi getirme
+			var order = await _orderRepository.GetOrderById(id);  // Id'ye göre siparişi getirme
+			var member = await _memberRepository.GetMemberById(order.MemberId);
+			var orderDetail = _orderDetailRepository.GetOrderDetailsByMemberId(member.Id);
 			if (order == null) // Sipariş bulunamazsa
 			{
 				return View("Error"); // 404 hatası döndürme
@@ -83,31 +156,38 @@ namespace WebApplication1.Controllers
 			var editOrderVM = new EditOrderViewModel()
 			{
 				Id = order.Id, // Sipariş id'sini order'dan alıp view model'e atama
-				Status = (Data.Enum.OrderStatus)order.Status,
-				Date = order.Result.Date,
-				Total = order.Result.Total,
-
+				Status = order.Status,
+				Date = order.Date,
+				Total = order.Total,
+				OrderDetails = orderDetail,
+				Member = member,
 			};
 			return View(editOrderVM); // View model'i view'a gönderme
 		}
 
 		// POST: Order/Edit/5
 		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(EditOrderViewModel editOrderVM)
+		public async Task<ActionResult> Edit(EditOrderViewModel editOrderVM)
 		{
+			var order = await _orderRepository.GetOrderById(editOrderVM.Id);
+			var member = await _memberRepository.GetMemberById(order.MemberId);
+			order.Member = member;
 			if (ModelState.IsValid) // Model doğrulaması geçerliyse
 			{
-				Order order = new Order()
+				order.Date = order.Date;
+				order.Total = editOrderVM.Total;
+				order.Status = editOrderVM.Status;
+				order.MemberId = order.MemberId;
+
+				_orderRepository.Update(order);
+				foreach (var orderDetail in order.OrderDetails)
 				{
-					Id = editOrderVM.Id, 
-					Date = editOrderVM.Date, 
-					Total = editOrderVM.Total, 
-					Status = editOrderVM.Status, 
-					MemberId = _userManager.GetUserId(User),
-				}; 
-				_orderRepository.Update(order); // Siparişi güncelleme
-				return RedirectToAction("Index"); // Index action'a yönlendirme
+					var temp = 0;
+				}
+				
+				
+				// Siparişi güncelleme
+				return RedirectToAction("Orders", "Dashboard"); // Index action'a yönlendirme
 			}
 			return View(editOrderVM); // Model doğrulaması geçerli değilse, view model'i view'a gönderme
 		}
@@ -127,7 +207,7 @@ namespace WebApplication1.Controllers
 		{
 			var order = await _orderRepository.GetOrderById(id);
 			_orderRepository.Delete(order); // Siparişi silme
-			return RedirectToAction("Index","Order"); // Index action'a yönlendirme
+			return RedirectToAction("Index", "Order"); // Index action'a yönlendirme
 		}
 
 	}

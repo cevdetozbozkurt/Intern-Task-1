@@ -14,5 +14,7 @@ namespace WebApplication1.ViewModels
 		public decimal Total { get; set; } // Sipariş toplamı
 
 		public OrderStatus Status { get; set; } // Sipariş durumu
+        public Member Member { get; set; }
+        public virtual IEnumerable<OrderDetail> OrderDetails { get; set; }
 	}
 }

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Order>
+
+<h2>Orders</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sipariş No</th>
+            <th>Tarih</th>
+            <th>Toplam</th>
+            <th>Durum</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.Date.ToShortDateString()</td>
+                <td>@order.Total TL</td>
+                <td>@order.Status</td>
+                <td><a asp-controller="Order" asp-action="OrderDetails" asp-route-id="@order.Id" class="btn btn-primary btn-user btn-block">Detaylar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

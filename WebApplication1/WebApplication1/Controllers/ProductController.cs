@@ -15,12 +15,14 @@ namespace WebApplication1.Controllers
 	{
 
 		private readonly IProductRepository _productRepository;
+		private readonly IPhotoService _photoService;
 		private readonly ApplicationDbContext _context;
 
-        public ProductController(ApplicationDbContext context,IProductRepository productRepository)
+        public ProductController(ApplicationDbContext context,IProductRepository productRepository, IPhotoService photoService)
         {
             _context = context;
 			_productRepository = productRepository;
+			_photoService = photoService;
         }
 
         public IActionResult Index()
@@ -34,6 +36,7 @@ namespace WebApplication1.Controllers
 		{
 			var product = await _productRepository.GetById(id);
 
+
 			if (product == null)
 			{
 				return View("Error");
@@ -46,7 +49,7 @@ namespace WebApplication1.Controllers
 				Description = product.Description,
 				Price = product.Price,
 				Stock = product.Stock,
-				Image = product.Image,
+				URL = product.Image,
 				Categories = new SelectList(categories, "Id","Name"),
 			};
 			return View(editMV);
@@ -68,11 +71,22 @@ namespace WebApplication1.Controllers
 			{
 				return View("Error");
 			}
+			//try
+			//{
+			//	await _photoService.DeletePhotoAsync(product.Image);
+			//}
+			//catch (Exception ex)
+			//{
+			//	ModelState.AddModelError("", "Could not delete photo");
+			//	return View(editVM);
+			//}
+			var photoResult = await _photoService.AddPhotoAsync(editVM.Image);
+
 			product.Name = editVM.Name;
 			product.Description = editVM.Description;
 			product.Price = editVM.Price;
 			product.Stock = editVM.Stock;
-			product.Image = editVM.Image;
+			product.Image = photoResult.Url.ToString();
 			product.CategoryId = editVM.CategoryId;
 			product.Category = _context.Categories.Find(editVM.CategoryId);
 			_productRepository.Update(product);
@@ -96,13 +110,13 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var result = await _photoService.AddPhotoAsync(clubVM.Image);
+				var result = await _photoService.AddPhotoAsync(productVM.Image);
                 var product = new Product
                 {
 					Id = productVM.Id,
                     Name = productVM.Name,
                     Description = productVM.Description,
-                    Image = productVM.Image,
+					Image = result.Url.ToString(),
                     Stock = productVM.Stock,
                     Price = productVM.Price,
 					CategoryId = productVM.CategoryId,

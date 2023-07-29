@@ -1,0 +1,10 @@
+﻿@using WebApplication1.ViewModels;
+@model AddOrderViewModel // Sipariş modeli
+
+<h2>Sipariş Onayı</h2>
+
+<p>Siparişiniz başarıyla alınmıştır.</p>
+<p>Sipariş tarihi: @Model.Date.ToShortDateString()</p>
+<p>Sipariş toplamı: @Model.Total $</p>
+<p>Sipariş durumu: @Model.Status</p>
+<p>Sipariş detaylarınızı Orders sayfasından takip edebilirsiniz.</p>

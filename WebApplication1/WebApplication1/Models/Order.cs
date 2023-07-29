@@ -6,6 +6,9 @@ namespace WebApplication1.Models
 {
 	public class Order
 	{
+
+
+
 		[Key]
 		public int Id { get; set; }
 

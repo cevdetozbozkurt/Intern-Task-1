@@ -10,42 +10,50 @@ namespace WebApplication1.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
-		private readonly ApplicationDbContext _context;
+        private readonly IOrderRepository _orderRepository;
         private readonly ICategoryRepository _categoryRepository;
 
-		public DashboardController(IProductRepository productRepository, IUserRepository userRepository, ApplicationDbContext context, ICategoryRepository categoryRepository)
+
+        public DashboardController(IProductRepository productRepository, IUserRepository userRepository, IOrderRepository orderRepository, ICategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
             _userRepository = userRepository;
-            _context = context;
+            _orderRepository = orderRepository;
             _categoryRepository = categoryRepository;
         }
 
         public IActionResult Index()
         {
-			
-			return View();
+
+            return View();
+        }
+
+        public async Task<IActionResult> Orders()
+        {
+            var model = await _orderRepository.GetAllOrders();
+
+            return View(model);
         }
 
         public async Task<IActionResult> Categories()
         {
             var categoryVM = new CategoryListViewModel();
-			categoryVM.Categories = await _categoryRepository.GetAll();
-			return View(categoryVM);
-		}
+            categoryVM.Categories = await _categoryRepository.GetAll();
+            return View(categoryVM);
+        }
 
         public async Task<IActionResult> Products()
         {
-			
-			var productVM = new ProductListViewModel();
+
+            var productVM = new ProductListViewModel();
             productVM.Products = await _productRepository.GetAll();
             return View(productVM);
         }
 
         public async Task<IActionResult> Users()
         {
-			
-			var users = await _userRepository.GetAllUsers();
+
+            var users = await _userRepository.GetAllUsers();
             List<UserListViewModel> result = new List<UserListViewModel>();
             foreach (var user in users)
             {

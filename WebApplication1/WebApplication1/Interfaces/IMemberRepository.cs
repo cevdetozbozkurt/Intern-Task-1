@@ -8,6 +8,7 @@ namespace WebApplication1.Interfaces
         bool Delete(Member member);
         Task<IEnumerable<Member>> GetAllMembers();
         Task<Member> GetMemberById(string memberId);
+        Task<Member> GetMemberNoTrackingById(string memberId);
         Task<Member> GetMemberByEmailAndPassword(string email, string password);
         bool Save();
         bool Update(Member member);

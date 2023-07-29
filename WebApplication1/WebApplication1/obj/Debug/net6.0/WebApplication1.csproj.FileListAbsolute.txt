@@ -189,3 +189,5 @@ C:\Users\eren2\OneDrive\Belgeler\GitHub\Intern-Task-1\WebApplication1\WebApplica
 C:\Users\eren2\OneDrive\Belgeler\GitHub\Intern-Task-1\WebApplication1\WebApplication1\bin\Debug\net6.0\System.Web.WebPages.Razor.dll
 C:\Users\eren2\OneDrive\Belgeler\GitHub\Intern-Task-1\WebApplication1\WebApplication1\bin\Debug\net6.0\System.Web.WebPages.dll
 C:\Users\eren2\OneDrive\Belgeler\GitHub\Intern-Task-1\WebApplication1\WebApplication1\bin\Debug\net6.0\Microsoft.Web.Infrastructure.dll
+C:\Users\eren2\OneDrive\Belgeler\GitHub\Intern-Task-1\WebApplication1\WebApplication1\bin\Debug\net6.0\CloudinaryDotNet.dll
+C:\Users\eren2\OneDrive\Belgeler\GitHub\Intern-Task-1\WebApplication1\WebApplication1\bin\Debug\net6.0\Newtonsoft.Json.dll

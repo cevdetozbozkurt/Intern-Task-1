@@ -14,7 +14,6 @@ namespace WebApplication1.Repository
             _context = context;
         }
 
-
         public bool Add(Order order)
 		{
 			_context.Orders.Add(order);
@@ -34,7 +33,7 @@ namespace WebApplication1.Repository
 
 		public async Task<Order> GetOrderById(int id)
 		{
-			return await _context.Orders.FirstOrDefaultAsync(i => i.Id == id);
+			return await _context.Orders.Include(x=>x.OrderDetails).FirstOrDefaultAsync(y=>y.Id == id);
 		}
 
 		public bool Update(Order order)

@@ -1,7 +1,5 @@
 ﻿@using WebApplication1.ViewModels;
-
-@model List<UserListViewModel>
-
+@model EditOrderViewModel
 
 <div id="wrapper">
 	<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
@@ -12,7 +10,7 @@
 		<hr>
 		<ul class="nav nav-pills flex-column mb-auto">
 			<li>
-				<a asp-controller="Dashboard" asp-action="Orders" asp-route-id="" class="nav-link link-dark">
+				<a asp-controller="Order" asp-action="Orders" asp-route-id="" class="nav-link link-dark">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket3" viewBox="0 0 16 16">
 						<path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM3.394 15l-1.48-6h-.97l1.525 6.426a.75.75 0 0 0 .729.574h9.606a.75.75 0 0 0 .73-.574L15.056 9h-.972l-1.479 6h-9.21z" />
 					</svg>
@@ -63,62 +61,67 @@
 			</li>
 		</ul>
 	</div>
-	<div id="content">
-		<div class="table-responsive">
+	<div id="content" class="align-items-center">
+
+		<form method="post" asp-action="Edit" enctype="multipart/form-data">
+			<input type="hidden" id="Id" name="Id" asp-for="Id" />
+			<div class="form-group">
+				<label>First Name</label>
+				<input asp-for="Member.FirstName" class="form-control form-control-user" placeholder="FirstName" />
+				<span asp-validation-for="Member.FirstName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label>Last Name</label>
+				<input asp-for="Member.LastName" class="form-control form-control-user" placeholder="LastName" />
+				<span asp-validation-for="Member.LastName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label>Email</label>
+				<input asp-for="Member.Email" class="form-control form-control-user" placeholder="Email" />
+				<span asp-validation-for="Member.Email" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label>Address</label>
+				<input asp-for="Member.Address" class="form-control form-control-user" placeholder="Address" />
+				<span asp-validation-for="Member.Address" class="text-danger"></span>
+			</div>
 			<table class="table">
 				<thead>
 					<tr>
-						<th scope="col">#</th>
-						<th scope="col">First Name</th>
-						<th scope="col">Last Name</th>
-						<th scope="col">Email</th>
-						<th scope="col">Address</th>
-						<th scope="col">#</th>
-						<th scope="col">#</th>
+						<th>Ürün Adı</th>
+						<th>Birim Fiyat</th>
+						<th>Miktar</th>
+						<th>Toplam Fiyat</th>
+						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					@{
-						var i = 1;
-					}
-
-					@foreach (var item in Model)
+					@foreach (var item in Model.OrderDetails)
 					{
-						<tr>
-							<th scope="row">@i</th>
-							<td>@item.FirstName</td>
-							<td>@item.LastName</td>
-							<td>@item.Email</td>
-							<td>@item.Address</td>
-							<td><a asp-controller="Member" asp-action="EditProfile" asp-route-id="@item.Id" class="btn btn-primary btn-user btn-block">Edit</a></td>
-							<td><a asp-controller="Member" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-user btn-outline-danger btn-block">Delete</a></td>
-						</tr>
+						// Siparişe ait ürünü bul
+						var product = item.Product;
+
+						// Ürün varsa tabloya ekle
+						if (product != null)
 						{
-							i++;
+							<tr>
+								<td>@product.Name</td>
+								<td>@product.Price TL</td>
+								<td>@item.Quantity</td>
+								<td>@(product.Price * item.Quantity) $</td>
+								<td><a asp-controller="Order" asp-action="EditDetail" asp-route-id="@item.Order.Id" class="btn btn-primary btn-user btn-block">Remove</a></td>
+							</tr>
 						}
 					}
 				</tbody>
 			</table>
-		</div>
+
+			<h4>Sipariş Toplamı: @Model.Total $</h4>
+
+			<h4>Sipariş Durumu: @Model.Status</h4>
+			
+			<button type="submit" class="btn btn-primary btn-user btn-block">Submit</button>
+		</form>
 	</div>
 </div>
-
-
-
-
-<!-- Bootstrap core JavaScript-->
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="~/lib/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="~/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="~/js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="~/js/chart-area-demo.js"></script>
-<script src="~/js/chart-pie-demo.js"></script>

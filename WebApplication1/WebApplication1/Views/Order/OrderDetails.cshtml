@@ -1,0 +1,46 @@
+﻿@using WebApplication1.ViewModels;
+@model AddOrderDetailViewModel // Sipariş detayları modeli
+
+<h2>Sipariş Detayları</h2>
+
+<h4>Müşteri Bilgileri</h4>
+
+<p>Ad Soyad: @Model.Member.FirstName @Model.Member.LastName</p>
+<p>E-posta: @Model.Member.Email</p>
+<p>Telefon: @Model.Member.PhoneNumber</p>
+<p>Adres: @Model.Member.Address</p>
+
+<h4>Sipariş Bilgileri</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Birim Fiyat</th>
+            <th>Miktar</th>
+            <th>Toplam Fiyat</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Order.OrderDetails)
+        {
+            // Siparişe ait ürünü bul
+            var product = Model.Products.FirstOrDefault(x => x.Id == item.ProductId);
+
+            // Ürün varsa tabloya ekle
+            if (product != null)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Price $</td>
+                    <td>@item.Quantity</td>
+                    <td>@(product.Price * item.Quantity) $</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h4>Sipariş Toplamı: @Model.Order.Total $</h4>
+
+<h4>Sipariş Durumu: @Model.Order.Status</h4>

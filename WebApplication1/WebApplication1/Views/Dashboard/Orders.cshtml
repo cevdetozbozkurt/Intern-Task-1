@@ -1,7 +1,6 @@
-﻿@using WebApplication1.ViewModels;
+﻿@model IEnumerable<Order>
 
-@model List<UserListViewModel>
-
+<h2>Orders</h2>
 
 <div id="wrapper">
 	<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
@@ -68,34 +67,27 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th scope="col">#</th>
-						<th scope="col">First Name</th>
-						<th scope="col">Last Name</th>
-						<th scope="col">Email</th>
-						<th scope="col">Address</th>
-						<th scope="col">#</th>
-						<th scope="col">#</th>
+						<th>Sipariş No</th>
+						<th>Tarih</th>
+						<th>Toplam</th>
+						<th>Durum</th>
+						<th></th>
+						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					@{
-						var i = 1;
-					}
-
-					@foreach (var item in Model)
+					@foreach (var order in Model)
 					{
 						<tr>
-							<th scope="row">@i</th>
-							<td>@item.FirstName</td>
-							<td>@item.LastName</td>
-							<td>@item.Email</td>
-							<td>@item.Address</td>
-							<td><a asp-controller="Member" asp-action="EditProfile" asp-route-id="@item.Id" class="btn btn-primary btn-user btn-block">Edit</a></td>
-							<td><a asp-controller="Member" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-user btn-outline-danger btn-block">Delete</a></td>
+							<td>@order.Id</td>
+							<td>@order.Date.ToShortDateString()</td>
+							<td>@order.Total $</td>
+							<td>@order.Status</td>
+							<td><a asp-controller="Order" asp-action="Edit" asp-route-id="@order.Id" class="btn btn-primary btn-user btn-block">Edit</a></td>
+							<td><a asp-controller="Order" asp-action="OrderDetails" asp-route-id="@order.Id" class="btn btn-primary btn-user btn-block">Details</a></td>
+							<td><a asp-controller="Order" asp-action="Delete" asp-route-id="@order.Id" class="btn btn-user btn-outline-danger btn-block">Delete</a></td>
 						</tr>
-						{
-							i++;
-						}
 					}
 				</tbody>
 			</table>
@@ -103,22 +95,3 @@
 	</div>
 </div>
 
-
-
-
-<!-- Bootstrap core JavaScript-->
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="~/lib/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="~/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="~/js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="~/js/chart-area-demo.js"></script>
-<script src="~/js/chart-pie-demo.js"></script>
